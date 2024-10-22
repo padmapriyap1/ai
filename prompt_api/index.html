@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="stylesheet" href="Style.css">
+      <link rel="stylesheet" href="Progress.css">
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Browser built in LLM</h1>
+            <h2>Talk to the browser's prompt API, see what it knows.</h2>
+
+            <p class="comment" id="chrome">
+                Enable chrome://flags/#optimization-guide-on-device-model, set it to BypassPerf <br>
+                and  enable chrome://flags/#prompt-api-for-gemini-nano.<br>
+                Click update on chrome://components/ "Optimization Guide On Device Model".
+            </p>
+            <p class="comment" id="edge">
+                Enable edge://flags/#edge-llm-on-device-model, set it to BypassPerf <br>
+                and enable edge://flags/#edge-llm-prompt-api-for-phi-mini.<br>
+                Click update on edge://components/ "Edge LLM On Device Model" and "Edge LLM Runtime".
+            </p>
+            <p id="error">
+            </p>
+            <p id="okay">
+                SUCCESS: Prompt API supported. <span><b>Char/s <b id="cps">0</b></b>|<b>Tokens/s <b id="tps">0</b></b>|<b>Start Latency (ms)<b id="latency">0</b></b></span>
+            </p>
+            <div class="wrapper" id="busy">
+                <div class="progressbar">
+                  <div class="stylization">
+                  </div>
+                </div>
+            </div>
+            <div class="imessage">
+            </div>
+            <textarea id="input" name="input">Do you think it is a good idea to embed an on-device language model in a web browser ?</textarea>
+            <button id="send"></button>
+        </div>
+    </body>
+    <script type="module" >
+        let success = true;
+        const kFeatureFlagError = "Prompt API is not available. Make sure you have enabled feature flags and are using Canary.";
+        const kNoModelError = "Prompt API is available, feature flag is likley set correctly but no models are available. Likley feature has crashed more than 5 times.";
+        function error(str)
+        {
+          // Show the first error.
+          if (success) {
+            document.getElementById("error").innerText = str;
+            success = false;
+          }
+          throw new Error(str);
+        }
+        function showBusy(busy)
+        {
+            document.getElementById("busy").style.display = busy ? "block" : "none";
+        }
+        async function checkDownload()
+        {
+            let result = await window.ai.languageModel.capabilities();
+            if (result.available == 'after-download')
+            {
+                window.setTimeout(checkDownload, 100);
+            }
+            if (result.available == 'readily')
+            {
+                window.location.reload();
+            }
+        }
+
+        try
+        {
+            let result = await window.ai.languageModel.capabilities();
+            if (result.available == 'no')
+            {
+              error(kNoModelError);
+            }
+            if (result.available == 'after-download')
+            {
+                // call the API to trigger download.
+                window.ai.languageModel.create({temperature: 1.0, topK: 1});
+                checkDownload();
+            }
+            if (result.available != 'readily')
+            {
+                error("Cannot create model now - " + result.available);
+            }
+        }
+        catch (e)
+        {
+            if (e.name === "TypeError")
+            {
+                error(kFeatureFlagError);
+            }
+        }
+
+        var session = null;
+        try
+        {
+            showBusy(true);
+            session = await window.ai.languageModel.create({temperature: 1.0, topK: 1});
+            showBusy(false);
+        }
+        catch (e)
+        {
+            error("Cannot create session now - " + e);
+        }
+
+        session = await window.ai.languageModel.create();
+        var update_element = null;
+        var current_cps = 0;
+        var initial_delay = null;
+        var start_time = null;
+
+        var post_prefill_time = null;
+        var post_prefill_c = null;
+        var post_prefill_t = null;
+
+        var cps_element = document.getElementById("cps");
+        var tps_element = document.getElementById("tps");
+        var latency_element = document.getElementById("latency");
+        var token_count = 0;
+        var current_tps = 0;
+        async function main(input)
+        {
+            update_element.scrollIntoView(false);
+            let stream = null;
+            try
+            {
+                showBusy(true);
+                stream = session.promptStreaming(input);
+            }
+            catch (e)
+            {
+                error("Cannot create stream now - " + e);
+            }
+            try {
+              for await (const chunk of stream) {
+                  showBusy(false);
+                  update_element.innerText = chunk;
+                  token_count++;
+                  // Wait for prefill to complete before we estimate tokens per second.
+                  if (token_count >= 2)
+                  {
+                    if (post_prefill_time)
+                    {
+                        const seconds = Math.floor((Date.now() - post_prefill_time) / 1000);
+                        current_cps = Math.round((update_element.innerText.length - post_prefill_c) / seconds);
+                        current_tps = Math.round((token_count - post_prefill_t) / seconds);
+                    }
+                    else
+                    {
+                        post_prefill_time = Date.now();
+                        post_prefill_c = update_element.innerText.length;
+                        post_prefill_t = token_count;
+                    }
+                  }
+                  if (initial_delay == null)
+                  {
+                      initial_delay = (Date.now() - start_time);
+                      latency_element.innerText = initial_delay;
+                  }
+                  cps_element.innerText = current_cps;
+                  tps_element.innerText = current_tps;
+              }
+              console.log(`${session.tokensSoFar}/${session.maxTokens} (${session.tokensLeft} left)`); console.log(token_count);
+            }
+            catch (e)
+            {
+                error("Stream error - " + e);
+            }
+        }
+
+        async function onSend() {
+            const inputText = document.getElementById("input").value;
+            const prompt = inputText;
+            let input = document.createElement("p");
+            input.setAttribute("class", "from-me");
+            input.innerText = inputText;
+            document.getElementsByClassName("imessage")[0].appendChild(input);
+            let reply = document.createElement("p");
+            reply.setAttribute("class", "from-them");
+            document.getElementsByClassName("imessage")[0].appendChild(reply);
+            update_element = reply;
+            reply.innerText = "...";
+            start_time = Date.now();
+            token_count = 0;
+            post_prefill_time = null;
+            post_prefill_c = null;
+            post_prefill_t = null;
+            main(prompt);
+        }
+        document.getElementById("send").onclick = onSend;
+        document.getElementById("okay").style.display = "block";
+        document.getElementById("input").addEventListener("keypress", e => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSend();
+            }
+        });
+        if (document.createElement("video").msVideoProcessing == 'default')
+        {
+            // Edge
+            document.body.classList.add("edge");
+        }
+        else
+        {
+            // Chrome
+            document.body.classList.add("chrome");
+        }
+        showBusy(false);
+    </script>
+</html>
