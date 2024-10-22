@@ -1,2 +1,2 @@
 # ai
-Prompt API related test page
+Projects related to Edge AI
