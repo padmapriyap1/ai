@@ -8,17 +8,6 @@
         <div class="container">
             <h1>Browser built in LLM</h1>
             <h2>Talk to the browser's prompt API, see what it knows.</h2>
-
-            <p class="comment" id="chrome">
-                Enable chrome://flags/#optimization-guide-on-device-model, set it to BypassPerf <br>
-                and  enable chrome://flags/#prompt-api-for-gemini-nano.<br>
-                Click update on chrome://components/ "Optimization Guide On Device Model".
-            </p>
-            <p class="comment" id="edge">
-                Enable edge://flags/#edge-llm-on-device-model, set it to BypassPerf <br>
-                and enable edge://flags/#edge-llm-prompt-api-for-phi-mini.<br>
-                Click update on edge://components/ "Edge LLM On Device Model" and "Edge LLM Runtime".
-            </p>
             <p id="error">
             </p>
             <p id="okay">
@@ -38,8 +27,8 @@
     </body>
     <script type="module" >
         let success = true;
-        const kFeatureFlagError = "Prompt API is not available. Make sure you have enabled feature flags and are using Canary.";
-        const kNoModelError = "Prompt API is available, feature flag is likley set correctly but no models are available. Likley feature has crashed more than 5 times.";
+        const kFeatureFlagError = "Prompt API is not available.";
+        const kNoModelError = "Prompt API is available, no models are available. Likley feature has crashed more than 5 times.";
         function error(str)
         {
           // Show the first error.
@@ -160,8 +149,8 @@
                   }
                   cps_element.innerText = current_cps;
                   tps_element.innerText = current_tps;
+                  console.log(`${session.tokensSoFar}/${session.maxTokens} (${session.tokensLeft} left)`); console.log(token_count);
               }
-              console.log(`${session.tokensSoFar}/${session.maxTokens} (${session.tokensLeft} left)`); console.log(token_count);
             }
             catch (e)
             {
@@ -196,16 +185,6 @@
                 onSend();
             }
         });
-        if (document.createElement("video").msVideoProcessing == 'default')
-        {
-            // Edge
-            document.body.classList.add("edge");
-        }
-        else
-        {
-            // Chrome
-            document.body.classList.add("chrome");
-        }
         showBusy(false);
     </script>
 </html>
