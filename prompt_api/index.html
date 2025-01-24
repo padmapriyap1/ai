@@ -1,23 +1,27 @@
+<!DOCTYPE html>
 <html>
     <head>
       <link rel="stylesheet" href="Style.css">
       <link rel="stylesheet" href="Progress.css">
-      <link rel="icon" type="image/x-icon" href="favicon.png">
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
     </head>
     <body>
         <div class="container">
             <h1>Browser built in LLM</h1>
             <h2>Talk to the browser's prompt API, see what it knows.</h2>
+            <!-- Add an input box text prompt to allow setting of initial prompt  -->
+            <p id="prompt">
+                <label for="prompt">Initial Prompt:</label>
+                <input type="text" id="initialPrompt" name="prompt" placeholder="Respond to every request in Shakespearian prose" style="width: 75%;">
+            </p>
             <p id="error">
             </p>
             <p id="okay">
                 SUCCESS: Prompt API supported. <span><b>Char/s <b id="cps">0</b></b>|<b>Tokens/s <b id="tps">0</b></b>|<b>Start Latency (ms)<b id="latency">0</b></b></span>
             </p>
-            <div class="wrapper" id="busy">
-                <div class="progressbar">
-                  <div class="stylization">
-                  </div>
-                </div>
+            <div class="progress-bar">
+                <label for="modelDownloadProgress">Model Download Progress:</label>
+                <progress id="modelDownloadProgress" value="0" max="100"></progress>
             </div>
             <div class="imessage">
             </div>
@@ -27,8 +31,37 @@
     </body>
     <script type="module" >
         let success = true;
+        var session = null;
         const kFeatureFlagError = "Prompt API is not available.";
-        const kNoModelError = "Prompt API is available, no models are available. Likley feature has crashed more than 5 times.";
+        const kNoModelError = "Prompt API is available. Likley feature has crashed more than 5 times.";
+
+        async function createNewSession() {
+            try{
+                var initialPrompt = document.getElementById("initialPrompt").value;
+                const sessionConfig = {
+                monitor(m) {
+                    m.addEventListener("downloadprogress", e => {
+                    // update the progress bar with latest download status
+                    document.getElementById("modelDownloadProgress").value = (e.loaded / e.total) * 100;
+                    if (e.loaded == e.total) {
+                        document.getElementById("modelDownloadProgress").value = 100;
+                        console.log("Download complete");
+                    }
+                    });
+                }
+                };
+                if (initialPrompt !== "") {
+                sessionConfig.initialPrompts = [{ role: "system", content: initialPrompt }];
+                }
+                session = await window.ai.languageModel.create(sessionConfig);
+                document.getElementById("modelDownloadProgress").value = 100;
+            }
+            catch (e)
+            {
+                error("Cannot create session now - " + e);
+            }
+        }
+
         function error(str)
         {
           // Show the first error.
@@ -38,22 +71,28 @@
           }
           throw new Error(str);
         }
-        function showBusy(busy)
-        {
-            document.getElementById("busy").style.display = busy ? "block" : "none";
-        }
+
         async function checkDownload()
         {
             let result = await window.ai.languageModel.capabilities();
             if (result.available == 'after-download')
             {
-                window.setTimeout(checkDownload, 100);
+                window.setTimeout(checkDownload, 1000);
             }
             if (result.available == 'readily')
             {
                 window.location.reload();
             }
         }
+
+        document.getElementById("initialPrompt").addEventListener("change", async function() {
+            try {
+                session.destroy();
+                await createNewSession();
+            } catch (e) {
+                error("Cannot create session now - " + e);
+            }
+        });
 
         try
         {
@@ -81,19 +120,7 @@
             }
         }
 
-        var session = null;
-        try
-        {
-            showBusy(true);
-            session = await window.ai.languageModel.create({temperature: 1.0, topK: 1});
-            showBusy(false);
-        }
-        catch (e)
-        {
-            error("Cannot create session now - " + e);
-        }
-
-        session = await window.ai.languageModel.create();
+        await createNewSession();
         var update_element = null;
         var current_cps = 0;
         var initial_delay = null;
@@ -114,7 +141,6 @@
             let stream = null;
             try
             {
-                showBusy(true);
                 stream = session.promptStreaming(input);
             }
             catch (e)
@@ -123,8 +149,7 @@
             }
             try {
               for await (const chunk of stream) {
-                  showBusy(false);
-                  update_element.innerText = chunk;
+                  update_element.innerText += chunk;
                   token_count++;
                   // Wait for prefill to complete before we estimate tokens per second.
                   if (token_count >= 2)
@@ -149,7 +174,7 @@
                   }
                   cps_element.innerText = current_cps;
                   tps_element.innerText = current_tps;
-                  console.log(`${session.tokensSoFar}/${session.maxTokens} (${session.tokensLeft} left)`); console.log(token_count);
+                  console.log(`${session.tokensSoFar}/${session.maxTokens} (${session.tokensLeft} left)`);
               }
             }
             catch (e)
@@ -169,7 +194,7 @@
             reply.setAttribute("class", "from-them");
             document.getElementsByClassName("imessage")[0].appendChild(reply);
             update_element = reply;
-            reply.innerText = "...";
+            reply.innerText = "";
             start_time = Date.now();
             token_count = 0;
             post_prefill_time = null;
@@ -185,6 +210,5 @@
                 onSend();
             }
         });
-        showBusy(false);
     </script>
 </html>
