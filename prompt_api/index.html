@@ -46,11 +46,9 @@
         async function createNewSession() {
             try{
                 var initialPrompt = document.getElementById("initialPrompt").value;
-                var vTemp = document.getElementById("temp").value;
-                var vTopK = document.getElementById("topK").value;
                 const sessionConfig = {
-                temperature: vTemp,
-                topK: vTopK,
+                temperature: document.getElementById("temp").value,
+                topK: document.getElementById("topK").value,
                 monitor(m) {
                     m.addEventListener("downloadprogress", e => {
                     // update the progress bar with latest download status
