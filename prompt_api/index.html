@@ -20,7 +20,7 @@
             </p>  
              <p id="topk">
             <label for="temp">TopK:</label></th>
-            <input type="text" id="topk" name="topk" placeholder="Set your response TopK here, a value between 1-3072. Default is 1" style="width: 80%;"></td>
+            <input type="text" id="topk" name="topk" placeholder="Set your TopK here, a value between 1-3072. Default is 1" style="width: 80%;"></td>
             </p>
             <p id="error">
             </p>
@@ -46,7 +46,17 @@
         async function createNewSession() {
             try{
                 var initialPrompt = document.getElementById("initialPrompt").value;
+                var vTemp = document.getElementById("temp").value;
+                var vTopK = document.getElementById("topK").value;
+                if (vTemp == "") {
+                    vTemp = 1.0;
+                }
+                 if (vTopK == "") {
+                     vTopK=1;
+                }
                 const sessionConfig = {
+                temperature: vTemp,
+                topK: vTopK,
                 monitor(m) {
                     m.addEventListener("downloadprogress", e => {
                     // update the progress bar with latest download status
@@ -101,7 +111,14 @@
                 error("Cannot create session now - " + e);
             }
         });
-
+        var vTemp = document.getElementById("temp").value;
+        var vTopK = document.getElementById("topK").value;
+        if (vTemp == "") {
+            vTemp = 1.0;
+        }
+         if (vTopK == "") {
+             vTopK=1;
+        }
         try
         {
             let result = await window.ai.languageModel.capabilities();
@@ -112,7 +129,7 @@
             if (result.available == 'after-download')
             {
                 // call the API to trigger download.
-                window.ai.languageModel.create({temperature: 1.0, topK: 1});
+                window.ai.languageModel.create({temperature: vTemp, topK: vTopK});
                 checkDownload();
             }
             if (result.available != 'readily')
