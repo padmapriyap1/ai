@@ -103,6 +103,22 @@
                 error("Cannot create session now - " + e);
             }
         });
+        document.getElementById("temperature").addEventListener("change", async function() {
+            try {
+                session.destroy();
+                await createNewSession();
+            } catch (e) {
+                error("Cannot create session now - " + e);
+            }
+        });
+        document.getElementById("topK").addEventListener("change", async function() {
+            try {
+                session.destroy();
+                await createNewSession();
+            } catch (e) {
+                error("Cannot create session now - " + e);
+            }
+        });
        
         try
         {
