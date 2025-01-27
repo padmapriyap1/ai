@@ -16,11 +16,11 @@
             </p>
             <p id="temp">
                 <label for="temp">Temperature:</label></th> 
-                <input type="text" id="temp" name="temp" placeholder="Set your response temperature here, a value between 0-1. Default is 0.8" style="width: 80%;"> 
+                <input type="text" id="temp" name="temp" defaultValue="0.8" placeholder="Set your response temperature here, a value between 0-1. Default is 0.8" style="width: 80%;"> 
             </p>  
              <p id="topk">
             <label for="topK">TopK:</label></th>
-            <input type="text" id="topK" name="topK" placeholder="Set your TopK here, a value between 1-3072. Default is 1" style="width: 80%;"></td>
+            <input type="text" id="topK" name="topK" defaultValue="1" placeholder="Set your TopK here, a value between 1-3072. Default is 1" style="width: 80%;"></td>
             </p>
             <p id="error">
             </p>
@@ -48,12 +48,6 @@
                 var initialPrompt = document.getElementById("initialPrompt").value;
                 var vTemp = document.getElementById("temp").value;
                 var vTopK = document.getElementById("topK").value;
-                if (vTemp == "") {
-                    vTemp = 1.0;
-                }
-                 if (vTopK == "") {
-                     vTopK=1;
-                }
                 const sessionConfig = {
                 temperature: vTemp,
                 topK: vTopK,
@@ -111,14 +105,7 @@
                 error("Cannot create session now - " + e);
             }
         });
-        var vTemp = document.getElementById("temp").value;
-        var vTopK = document.getElementById("topK").value;
-        if (vTemp == "") {
-            vTemp = 1.0;
-        }
-         if (vTopK == "") {
-             vTopK=1;
-        }
+       
         try
         {
             let result = await window.ai.languageModel.capabilities();
@@ -129,7 +116,7 @@
             if (result.available == 'after-download')
             {
                 // call the API to trigger download.
-                window.ai.languageModel.create({temperature: vTemp, topK: vTopK});
+                window.ai.languageModel.create({temperature: document.getElementById("temp").value, topK: document.getElementById("topK").value});
                 checkDownload();
             }
             if (result.available != 'readily')
