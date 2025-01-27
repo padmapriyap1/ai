@@ -249,7 +249,27 @@ h2 {
 {
   display:block;
 }
-
+table
+{
+  border-collapse: collapse;
+  width: 50%;
+  margin: 20px auto;
+}
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+input {
+    padding: 8px;
+    width: 80%;
+    box-sizing: border-box;
+}
 .edge #edge
 {
   display:block;
