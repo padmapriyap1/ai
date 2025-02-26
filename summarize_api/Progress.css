@@ -89,4 +89,8 @@
     background-position: 400px 0;
   }
 }
+textarea {
+  width: 100%;
+  min-height: 30vh
+}
 </style>

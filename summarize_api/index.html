@@ -7,25 +7,50 @@
     </head>
     <body>
         <div class="container">
-            <h1>Browser built in LLM</h1>
-            <h2>Talk to the browser's prompt API, see what it knows.</h2>
+            <h1>On Device Summarize API playground</h1>
+            <h2>Talk to the browser's Summarize API, see how it can help.</h2>
             <!-- Add an input box text prompt to allow setting of initial prompt  -->
-            <p id="prompt">
-                <label for="prompt">Initial Prompt:</label>
-                <input type="text" id="initialPrompt" name="prompt" placeholder="Respond to every request in Shakespearian prose" style="width: 75%;">
-            </p>
-            <p id="temp">
-                <label for="temp">Temperature:</label></th> 
-                <input type="text" id="temperature" name="temperature" defaultValue="0.8" placeholder="Set your response temperature here, a value between 0-1. Default is 0.8" style="width: 80%;"> 
-            </p>  
-             <p id="topk">
-            <label for="topK">TopK:</label></th>
-            <input type="text" id="topK" name="topK" defaultValue="1" placeholder="Set your TopK here, a value between 1-3072. Default is 1" style="width: 80%;"></td>
+            <p id="summarize">
+            <fieldset>
+                <label for="context">Choose a context for this summarization:</label>
+                <select id="context">
+                    <option value="This is an article that needs summary">Article summary</option>
+                    <option value="Help summarize the conversation">Email or Chat Summary </option>
+                    <option value="Generate Title and Headline">Title & Headline Suggestion</option>
+                    <option value="Create a Teaser">Create a Teaser</option>
+                </select>
+                <br><br>
+                <legend>Settings</legend>
+                <div>
+                  <label for="type">Summary Type:</label>
+                  <select id="type">
+                    <option value="key-points" selected>Key Points</option>
+                    <option value="tl;dr">TL;DR</option>
+                    <option value="teaser">Teaser</option>
+                    <option value="headline">Headline</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="length">Length:</label>
+                  <select id="length">
+                    <option value="short" selected>Short</option>
+                    <option value="medium">Medium</option>
+                    <option value="long">Long</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="format">Format:</label>
+                  <select id="format">
+                    <option value="markdown" selected>Markdown</option>
+                    <option value="plain-text">Plain text</option>
+                  </select>
+                </div>
+              </fieldset>
             </p>
             <p id="error">
             </p>
             <p id="okay">
-                SUCCESS: Prompt API supported. <span><b>Char/s <b id="cps">0</b></b>|<b>Tokens/s <b id="tps">0</b></b>|<b>Start Latency (ms)<b id="latency">0</b></b></span>
+                SUCCESS: Summarize API supported. <span><b>Char/s <b id="cps">0</b></b>|<b>Tokens/s <b id="tps">0</b></b>|<b>Start Latency (ms)<b id="latency">0</b></b></span>
             </p>
             <div class="progress-bar">
                 <label for="modelDownloadProgress">Model Download Progress:</label>
@@ -33,22 +58,46 @@
             </div>
             <div class="imessage">
             </div>
-            <textarea id="input" name="input">Which dog breed is good for first time dog owners?</textarea>
+            <textarea id="input" name="input">
+                <b><i>Alex</i>:</b> Hey Jamie, do you have a moment to discuss the progress on the new software update?<br>
+                <b><i>Jamie:</i>:</b> Of course, Alex. What's up?<br>                    
+                <b><i>Alex</i>:</b> I wanted to check in on the status of the user interface redesign. How's it coming along?<br>                    
+                <b><i>Jamie:</i>:</b> It's going well. We've completed the initial design phase and are now working on the user testing. So far, the feedback has been positive.<br>                    
+                <b><i>Alex</i>:</b> That's great to hear! Do you think we'll be able to meet the deadline for the beta release next month?<br>                    
+                <b><i>Jamie:</i>:</b> Yes, I believe so. We're on track, and the team is working hard to ensure everything is polished and ready for the beta release.<br>                    
+                <b><i>Alex</i>:</b> Excellent. Let me know if there's anything you need help with or if any issues come up.<br>                    
+                <b><i>Jamie:</i>:</b> Will do, Alex. Thanks for checking in. I'll keep you updated on our progress.<br>                    
+                <b><i>Alex</i>:</b> Thanks, Jamie. Keep up the good work!<br>                    
+                <b><i>Alex</i>:</b> By the way, have you had a chance to look at the new feature requests from the marketing team?<br>                    
+                <b><i>Jamie:</i>:</b> Yes, I have. Some of the requests are quite interesting and could add significant value to our product. However, we need to prioritize them based on our current workload.<br>                    
+                <b><i>Alex</i>:</b> Agreed. Let's schedule a meeting with the marketing team to discuss the feasibility and timeline for these new features.<br>                    
+                <b><i>Jamie:</i>:</b> Sounds like a plan. I'll set up a meeting for next week. In the meantime, I'll start evaluating the technical requirements for the top priority features.<br>                    
+                <b><i>Alex</i>:</b> Perfect. Also, have you heard about the upcoming company hackathon? I think it could be a great opportunity for our team to brainstorm and develop some innovative solutions.<br>                    
+                <b><i>Jamie:</i>:</b> Yes, I heard about it. I'm excited to participate. It will be a great chance to collaborate with colleagues from different departments and showcase our skills.<br>
+                <b><i>Alex</i>:</b> Absolutely. Let's encourage our team to join and come up with some creative ideas. It could also be a good team-building exercise.<br>                    
+                <b><i>Jamie:</i>:</b> Definitely. I'll send out an email to the team to gauge their interest and start forming groups.<br>                    
+                <b><i>Alex</i>:</b> Great! Thanks, Jamie. I appreciate your proactive approach.<br>                    
+                <b><i>Jamie:</i>:</b> No problem, Alex. I'm looking forward to it. Let's make it a success!<br>
+            </textarea>
             <button id="send"></button>
         </div>
     </body>
     <script type="module" >
         let success = true;
         var session = null;
-        const kFeatureFlagError = "Prompt API is not available.";
-        const kNoModelError = "Prompt API is available. Likley feature has crashed more than 5 times.";
-
+        const kFeatureFlagError = "Summarize API is not available.";
+        const kNoModelError = "Summarize API is available. Likley feature has crashed more than 5 times.";
+        const c = document.querySelector("#context")
+            , t = document.querySelector("#type")
+            , f = document.querySelector("#format")
+            , l = document.querySelector("#length")
         async function createNewSession() {
-            try{
-                var initialPrompt = document.getElementById("initialPrompt").value;
+            try{                
                 const sessionConfig = {
-                temperature: document.getElementById("temperature").value,
-                topK: document.getElementById("topK").value,
+                sharedContext: c,
+                type: t,
+                format: f,
+                length: l,
                 monitor(m) {
                     m.addEventListener("downloadprogress", e => {
                     // update the progress bar with latest download status
@@ -60,10 +109,7 @@
                     });
                 }
                 };
-                if (initialPrompt !== "") {
-                sessionConfig.initialPrompts = [{ role: "system", content: initialPrompt }];
-                }
-                session = await window.ai.languageModel.create(sessionConfig);
+                session = await window.ai.summarize.create(sessionConfig);
                 document.getElementById("modelDownloadProgress").value = 100;
             }
             catch (e)
@@ -84,7 +130,7 @@
 
         async function checkDownload()
         {
-            let result = await window.ai.languageModel.capabilities();
+            let result = await window.ai.summarize.capabilities();
             if (result.available == 'after-download')
             {
                 window.setTimeout(checkDownload, 1000);
@@ -95,34 +141,24 @@
             }
         }
 
-        document.getElementById("initialPrompt").addEventListener("change", async function() {
+        //Add Event lisner for all input areas
+        async function restartSession() {
             try {
                 session.destroy();
                 await createNewSession();
             } catch (e) {
                 error("Cannot create session now - " + e);
             }
-        });
-        document.getElementById("temperature").addEventListener("change", async function() {
-            try {
-                session.destroy();
-                await createNewSession();
-            } catch (e) {
-                error("Cannot create session now - " + e);
-            }
-        });
-        document.getElementById("topK").addEventListener("change", async function() {
-            try {
-                session.destroy();
-                await createNewSession();
-            } catch (e) {
-                error("Cannot create session now - " + e);
-            }
-        });
-       
+        }
+        document.getElementById("context").addEventListener("change", restartSession);
+        document.getElementById("type").addEventListener("change", restartSession);
+        document.getElementById("format").addEventListener("change", restartSession);
+        document.getElementById("length").addEventListener("change", restartSession);
+
+        
         try
         {
-            let result = await window.ai.languageModel.capabilities();
+            let result = await window.ai.summarize.capabilities();
             if (result.available == 'no')
             {
               error(kNoModelError);
@@ -130,7 +166,13 @@
             if (result.available == 'after-download')
             {
                 // call the API to trigger download.
-                window.ai.languageModel.create({temperature: document.getElementById("temp").value, topK: document.getElementById("topK").value});
+                const options = {
+                        sharedContext: document.getElementById("context").value,
+                        type: document.getElementById("type").value,
+                        format: document.getElementById("format").value,
+                        length: document.getElementById("length").value,
+                        };
+                window.ai.summarize.create(options);
                 checkDownload();
             }
             if (result.available != 'readily')
@@ -167,7 +209,10 @@
             let stream = null;
             try
             {
-                stream = session.promptStreaming(input);
+                stream = session.summarize(input, { sharedContext: c,
+                                                    type: t,
+                                                    format: f,
+                                                    length: l});
             }
             catch (e)
             {
