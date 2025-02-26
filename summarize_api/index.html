@@ -130,7 +130,7 @@
 
         async function checkDownload()
         {
-            let result = await window.ai.summarize.capabilities();
+            let result = await window.ai.summarizer.capabilities();
             if (result.available == 'after-download')
             {
                 window.setTimeout(checkDownload, 1000);
@@ -158,7 +158,7 @@
         
         try
         {
-            let result = await window.ai.summarize.capabilities();
+            let result = await window.ai.summarizer.capabilities();
             if (result.available == 'no')
             {
               error(kNoModelError);
