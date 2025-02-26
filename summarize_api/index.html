@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="stylesheet" href="Style.css">
+      <link rel="stylesheet" href="Progress.css">
+      <link rel="icon" type="image/x-icon" href="favicon.png">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Browser built in LLM</h1>
+            <h2>Talk to the browser's prompt API, see what it knows.</h2>
+            <!-- Add an input box text prompt to allow setting of initial prompt  -->
+            <p id="prompt">
+                <label for="prompt">Initial Prompt:</label>
+                <input type="text" id="initialPrompt" name="prompt" placeholder="Respond to every request in Shakespearian prose" style="width: 75%;">
+            </p>
+            <p id="temp">
+                <label for="temp">Temperature:</label></th> 
+                <input type="text" id="temperature" name="temperature" defaultValue="0.8" placeholder="Set your response temperature here, a value between 0-1. Default is 0.8" style="width: 80%;"> 
+            </p>  
+             <p id="topk">
+            <label for="topK">TopK:</label></th>
+            <input type="text" id="topK" name="topK" defaultValue="1" placeholder="Set your TopK here, a value between 1-3072. Default is 1" style="width: 80%;"></td>
+            </p>
+            <p id="error">
+            </p>
+            <p id="okay">
+                SUCCESS: Prompt API supported. <span><b>Char/s <b id="cps">0</b></b>|<b>Tokens/s <b id="tps">0</b></b>|<b>Start Latency (ms)<b id="latency">0</b></b></span>
+            </p>
+            <div class="progress-bar">
+                <label for="modelDownloadProgress">Model Download Progress:</label>
+                <progress id="modelDownloadProgress" value="0" max="100"></progress>
+            </div>
+            <div class="imessage">
+            </div>
+            <textarea id="input" name="input">Which dog breed is good for first time dog owners?</textarea>
+            <button id="send"></button>
+        </div>
+    </body>
+    <script type="module" >
+        let success = true;
+        var session = null;
+        const kFeatureFlagError = "Prompt API is not available.";
+        const kNoModelError = "Prompt API is available. Likley feature has crashed more than 5 times.";
+
+        async function createNewSession() {
+            try{
+                var initialPrompt = document.getElementById("initialPrompt").value;
+                const sessionConfig = {
+                temperature: document.getElementById("temperature").value,
+                topK: document.getElementById("topK").value,
+                monitor(m) {
+                    m.addEventListener("downloadprogress", e => {
+                    // update the progress bar with latest download status
+                    document.getElementById("modelDownloadProgress").value = (e.loaded / e.total) * 100;
+                    if (e.loaded == e.total) {
+                        document.getElementById("modelDownloadProgress").value = 100;
+                        console.log("Download complete");
+                    }
+                    });
+                }
+                };
+                if (initialPrompt !== "") {
+                sessionConfig.initialPrompts = [{ role: "system", content: initialPrompt }];
+                }
+                session = await window.ai.languageModel.create(sessionConfig);
+                document.getElementById("modelDownloadProgress").value = 100;
+            }
+            catch (e)
+            {
+                error("Cannot create session now - " + e);
+            }
+        }
+
+        function error(str)
+        {
+          // Show the first error.
+          if (success) {
+            document.getElementById("error").innerText = str;
+            success = false;
+          }
+          throw new Error(str);
+        }
+
+        async function checkDownload()
+        {
+            let result = await window.ai.languageModel.capabilities();
+            if (result.available == 'after-download')
+            {
+                window.setTimeout(checkDownload, 1000);
+            }
+            if (result.available == 'readily')
+            {
+                window.location.reload();
+            }
+        }
+
+        document.getElementById("initialPrompt").addEventListener("change", async function() {
+            try {
+                session.destroy();
+                await createNewSession();
+            } catch (e) {
+                error("Cannot create session now - " + e);
+            }
+        });
+        document.getElementById("temperature").addEventListener("change", async function() {
+            try {
+                session.destroy();
+                await createNewSession();
+            } catch (e) {
+                error("Cannot create session now - " + e);
+            }
+        });
+        document.getElementById("topK").addEventListener("change", async function() {
+            try {
+                session.destroy();
+                await createNewSession();
+            } catch (e) {
+                error("Cannot create session now - " + e);
+            }
+        });
+       
+        try
+        {
+            let result = await window.ai.languageModel.capabilities();
+            if (result.available == 'no')
+            {
+              error(kNoModelError);
+            }
+            if (result.available == 'after-download')
+            {
+                // call the API to trigger download.
+                window.ai.languageModel.create({temperature: document.getElementById("temp").value, topK: document.getElementById("topK").value});
+                checkDownload();
+            }
+            if (result.available != 'readily')
+            {
+                error("Cannot create model now - " + result.available);
+            }
+        }
+        catch (e)
+        {
+            if (e.name === "TypeError")
+            {
+                error(kFeatureFlagError);
+            }
+        }
+
+        await createNewSession();
+        var update_element = null;
+        var current_cps = 0;
+        var initial_delay = null;
+        var start_time = null;
+
+        var post_prefill_time = null;
+        var post_prefill_c = null;
+        var post_prefill_t = null;
+
+        var cps_element = document.getElementById("cps");
+        var tps_element = document.getElementById("tps");
+        var latency_element = document.getElementById("latency");
+        var token_count = 0;
+        var current_tps = 0;
+        async function main(input)
+        {
+            update_element.scrollIntoView(false);
+            let stream = null;
+            try
+            {
+                stream = session.promptStreaming(input);
+            }
+            catch (e)
+            {
+                error("Cannot create stream now - " + e);
+            }
+            try {
+              for await (const chunk of stream) {
+                  update_element.innerText += chunk;
+                  token_count++;
+                  // Wait for prefill to complete before we estimate tokens per second.
+                  if (token_count >= 2)
+                  {
+                    if (post_prefill_time)
+                    {
+                        const seconds = Math.floor((Date.now() - post_prefill_time) / 1000);
+                        current_cps = Math.round((update_element.innerText.length - post_prefill_c) / seconds);
+                        current_tps = Math.round((token_count - post_prefill_t) / seconds);
+                    }
+                    else
+                    {
+                        post_prefill_time = Date.now();
+                        post_prefill_c = update_element.innerText.length;
+                        post_prefill_t = token_count;
+                    }
+                  }
+                  if (initial_delay == null)
+                  {
+                      initial_delay = (Date.now() - start_time);
+                      latency_element.innerText = initial_delay;
+                  }
+                  cps_element.innerText = current_cps;
+                  tps_element.innerText = current_tps;
+                  console.log(`${session.tokensSoFar}/${session.maxTokens} (${session.tokensLeft} left)`);
+              }
+            }
+            catch (e)
+            {
+                error("Stream error - " + e);
+            }
+        }
+
+        async function onSend() {
+            const inputText = document.getElementById("input").value;
+            const prompt = inputText;
+            let input = document.createElement("p");
+            input.setAttribute("class", "from-me");
+            input.innerText = inputText;
+            document.getElementsByClassName("imessage")[0].appendChild(input);
+            let reply = document.createElement("p");
+            reply.setAttribute("class", "from-them");
+            document.getElementsByClassName("imessage")[0].appendChild(reply);
+            update_element = reply;
+            reply.innerText = "";
+            start_time = Date.now();
+            token_count = 0;
+            post_prefill_time = null;
+            post_prefill_c = null;
+            post_prefill_t = null;
+            main(prompt);
+        }
+        document.getElementById("send").onclick = onSend;
+        document.getElementById("okay").style.display = "block";
+        document.getElementById("input").addEventListener("keypress", e => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSend();
+            }
+        });
+    </script>
+</html>
