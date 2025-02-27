@@ -31,17 +31,17 @@
 }
 )();
 const n = document.querySelector("#input")
-  , t = document.querySelector("#context")
+  , q = document.querySelector("#context")
   , u = document.querySelector("#type")
   , l = document.querySelector("#format")
   , d = document.querySelector("#length")
   , p = document.querySelector("#output")
-  , w = async (q, r, i, o, a) => {
+  , w = async (x, r, i, o, a) => {
     let e;
     if (!await y())
         throw new Error("AI Summarization is not supported");
     return window.ai.summarizer.create({
-        sharedContext: q,
+        sharedContext: x,
         type: r,
         format: i,
         length: o,
@@ -54,7 +54,7 @@ const n = document.querySelector("#input")
         return !0;
     try {
         await window.ai.summarizer.create({
-            sharedContext: t.value,
+            sharedContext: q.value,
             type: u.value,
             format: l.value,
             length: d.value
@@ -77,14 +77,14 @@ const n = document.querySelector("#input")
         clearTimeout(o),
         o = setTimeout(async () => {
             p.textContent = "Generating summary...";
-            let e = await w(t.value, u.value, l.value, d.value)
+            let e = await w(q.value, u.value, l.value, d.value)
               , t = await e.summarize(n.value);
             e.destroy(),
             p.textContent = t
         }
         , 1e3)
     }
-    t.addEventListener("change", a),
+    q.addEventListener("change", a),
     u.addEventListener("change", a),
     l.addEventListener("change", a),
     d.addEventListener("change", a),
