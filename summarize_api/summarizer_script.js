@@ -30,19 +30,18 @@
     }
 }
 )();
-const f = 4e3
-  , n = document.querySelector("#input")
+const n = document.querySelector("#input")
   , t = document.querySelector("#context")
   , u = document.querySelector("#type")
   , l = document.querySelector("#format")
   , d = document.querySelector("#length")
   , p = document.querySelector("#output")
-  , w = async (t, r, i, o, a) => {
+  , w = async (q, r, i, o, a) => {
     let e;
     if (!await y())
         throw new Error("AI Summarization is not supported");
     return window.ai.summarizer.create({
-        sharedContext: t,
+        sharedContext: q,
         type: r,
         format: i,
         length: o,
