@@ -32,6 +32,7 @@
 )();
 const f = 4e3
   , n = document.querySelector("#input")
+  , t = document.querySelector("#context")
   , u = document.querySelector("#type")
   , l = document.querySelector("#format")
   , d = document.querySelector("#length")
@@ -40,11 +41,12 @@ const f = 4e3
   , v = document.querySelector("#summarization-unsupported")
   , h = document.querySelector("#summarization-unavailable")
   , p = document.querySelector("#output")
-  , w = async (r, i, o, a) => {
+  , w = async (t, r, i, o, a) => {
     let e;
     if (!await y())
         throw new Error("AI Summarization is not supported");
     return window.ai.summarizer.create({
+        sharedContext: t,
         type: r,
         format: i,
         length: o,
@@ -56,7 +58,12 @@ const f = 4e3
     if (r.available === "readily" || r.available === "after-download")
         return !0;
     try {
-        await window.ai.summarizer.create()
+        await window.ai.summarizer.create({
+            sharedContext: t.value,
+            type: u.value,
+            format: l.value,
+            length: d.value
+        })
     } catch {}
     return r = await window.ai.summarizer.capabilities(),
     r.available !== "no"
@@ -75,13 +82,14 @@ const f = 4e3
         clearTimeout(o),
         o = setTimeout(async () => {
             p.textContent = "Generating summary...";
-            let e = await w(u.value, l.value, d.value)
+            let e = await w(t.value, u.value, l.value, d.value)
               , t = await e.summarize(n.value);
             e.destroy(),
             p.textContent = t
         }
         , 1e3)
     }
+    t.addEventListener("change", a),
     u.addEventListener("change", a),
     l.addEventListener("change", a),
     d.addEventListener("change", a),

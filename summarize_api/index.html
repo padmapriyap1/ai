@@ -22,6 +22,15 @@
         <fieldset>
             <legend>Settings</legend>
             <div>
+              <label for="context">Context:</label>
+              <select id="context">
+                  <option value="This is an article that needs summary">Article summary</option>
+                  <option value="Help summarize the conversation">Email or Chat Summary </option>
+                  <option value="Generate Title and Headline">Title & Headline Suggestion</option>
+                  <option value="Create a Teaser">Create a Teaser</option>
+              </select>
+              </div>
+            <div>
               <label for="type">Summary Type:</label>
               <select id="type">
                 <option value="key-points" selected>Key Points</option>
@@ -49,22 +58,12 @@
         <fieldset>
           <legend>How & What Can I summarize for you?</legend>
           <textarea id="input"></textarea>
-          <div>Character Count: <span id="character-count">0</span><span id="character-count-exceed" class="hidden"> (may exceed maximum token limit supported by the API.)</span></div>
         </fieldset>
         
         <div>
           <h2>Summary</h2>
-          <div class="imessage" id="output"></div>
+          <div id="output"></div>
         </div>
     </main>
-    <footer>
-      Be the first to test new AI APIs. Your feedback is invaluable to our development process. Join our <a href=" https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">Early Preview Program</a> today.
-    </footer>
-    <div class="dialog" id="summarization-unavailable">
-      <div>Your browser doesn't support the Summarization API. If you're on Chrome, join the <a href=" https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">Early Preview Program</a> and enable it.</div>
-    </div>
-    <div class="dialog" id="summarization-unsupported">
-      <div>The Summarization API is available, but your device is unable to run it. Check device requirements in the <a href=" https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">Early Preview Program</a> documentation.</div>
-    </div>
   </body>
 </html>
