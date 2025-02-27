@@ -55,14 +55,18 @@
               </select>
             </div>
         </fieldset>
+        <br/><br/>
         <fieldset>
-          <legend>How & What Can I summarize for you?</legend>
-          <textarea id="input"></textarea>
+          <textarea id="input" placeholder="Type or paste your content here to summarize...""></textarea>
         </fieldset>
-        
+        <br/><br/>
         <div>
-          <h2>Summary</h2>
-          <div id="output"></div>
+          <details open>
+            <summary>Summarization Result</summary>
+            <article>
+              <pre id="output"></pre>
+            </article>
+            </details>          
         </div>
     </main>
   </body>
