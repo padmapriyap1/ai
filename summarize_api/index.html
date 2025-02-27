@@ -95,10 +95,10 @@ Jamie: No problem, Alex. I'm looking forward to it. Let's make it a success!
         async function createNewSession() {
             try{                
                 const sessionConfig = {
-                sharedContext: c,
-                type: t,
-                format: f,
-                length: l,
+                sharedContext: c.value,
+                type: t.value,
+                format: f.value,
+                length: l.value,
                 monitor(m) {
                     m.addEventListener("downloadprogress", e => {
                     // update the progress bar with latest download status
