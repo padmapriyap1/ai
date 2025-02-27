@@ -36,10 +36,6 @@ const f = 4e3
   , u = document.querySelector("#type")
   , l = document.querySelector("#format")
   , d = document.querySelector("#length")
-  , c = document.querySelector("#character-count")
-  , m = document.querySelector("#character-count-exceed")
-  , v = document.querySelector("#summarization-unsupported")
-  , h = document.querySelector("#summarization-unavailable")
   , p = document.querySelector("#output")
   , w = async (t, r, i, o, a) => {
     let e;
@@ -93,14 +89,7 @@ const f = 4e3
     u.addEventListener("change", a),
     l.addEventListener("change", a),
     d.addEventListener("change", a),
-    n.addEventListener("input", () => {
-        c.textContent = n.value.length.toFixed(),
-        n.value.length > f ? (c.classList.add("tokens-exceeded"),
-        m.classList.remove("hidden")) : (c.classList.remove("tokens-exceeded"),
-        m.classList.add("hidden")),
-        a()
-    }
-    )
+    n.addEventListener("input", a)
 }
 ;
 S();
