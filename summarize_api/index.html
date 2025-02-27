@@ -110,7 +110,7 @@ Jamie: No problem, Alex. I'm looking forward to it. Let's make it a success!
                     });
                 }
                 };
-                session = await window.ai.summarize.create(sessionConfig);
+                session = await window.ai.summarizer.create(sessionConfig);
                 document.getElementById("modelDownloadProgress").value = 100;
             }
             catch (e)
@@ -173,7 +173,7 @@ Jamie: No problem, Alex. I'm looking forward to it. Let's make it a success!
                         format: document.getElementById("format").value,
                         length: document.getElementById("length").value,
                         };
-                window.ai.summarize.create(options);
+                window.ai.summarizer.create(options);
                 checkDownload();
             }
             if (result.available != 'readily')
