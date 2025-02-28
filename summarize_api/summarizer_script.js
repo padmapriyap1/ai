@@ -37,7 +37,7 @@ const n = document.querySelector("#input")
   , d = document.querySelector("#length")
   , p = document.querySelector("#output")
   , w = async (x, r, i, o, a) => {
-    let m;
+    let e;
     if (!await y())
         throw new Error("AI Summarization is not supported");    
     return window.ai.summarizer.create({
