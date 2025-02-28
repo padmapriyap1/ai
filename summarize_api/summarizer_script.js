@@ -39,22 +39,13 @@ const n = document.querySelector("#input")
   , w = async (x, r, i, o, a) => {
     let m;
     if (!await y())
-        throw new Error("AI Summarization is not supported");
+        throw new Error("AI Summarization is not supported");    
     return window.ai.summarizer.create({
         sharedContext: x,
         type: r,
         format: i,
         length: o,
-        monitor(m) {
-            m.addEventListener("downloadprogress", e => {
-            // update the progress bar with latest download status
-            document.getElementById("modelDownloadProgress").value = (e.loaded / e.total) * 100;
-            if (e.loaded == e.total) {
-                document.getElementById("modelDownloadProgress").value = 100;
-                console.log("Download complete");
-            }
-            });
-        }
+        monitor: e
     })
 }
   , y = async () => {
@@ -66,7 +57,17 @@ const n = document.querySelector("#input")
             sharedContext: q.value,
             type: u.value,
             format: l.value,
-            length: d.value
+            length: d.value,
+            monitor(m) {
+                m.addEventListener("downloadprogress", e => {
+                // update the progress bar with latest download status
+                document.getElementById("modelDownloadProgress").value = (e.loaded / e.total) * 100;
+                if (e.loaded == e.total) {
+                    document.getElementById("modelDownloadProgress").value = 100;
+                    console.log("Download complete");
+                }
+                });
+            }
         })
     } catch {}
     return r = await window.ai.summarizer.capabilities(),
@@ -97,8 +98,7 @@ const n = document.querySelector("#input")
     u.addEventListener("change", a),
     l.addEventListener("change", a),
     d.addEventListener("change", a),
-    n.addEventListener("input", a),
-    document.getElementById("modelDownloadProgress").value = 100;
+    n.addEventListener("input", a)
 }
 ;
 S();

@@ -210,7 +210,7 @@ Jamie: No problem, Alex. I'm looking forward to it. Let's make it a success!
             let stream = null;
             try
             {
-                stream = session.summarize(input, { sharedContext: c.value,
+                stream = await session.summarize(input, { sharedContext: c.value,
                                                     type: t.value,
                                                     format: f.value,
                                                     length: l.value});
