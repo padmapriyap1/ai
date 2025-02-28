@@ -45,7 +45,16 @@ const n = document.querySelector("#input")
         type: r,
         format: i,
         length: o,
-        monitor: e
+        monitor(m) {
+            m.addEventListener("downloadprogress", e => {
+            // update the progress bar with latest download status
+            document.getElementById("modelDownloadProgress").value = (e.loaded / e.total) * 100;
+            if (e.loaded == e.total) {
+                document.getElementById("modelDownloadProgress").value = 100;
+                console.log("Download complete");
+            }
+            });
+        }
     })
 }
   , y = async () => {
