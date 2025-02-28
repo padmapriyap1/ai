@@ -37,7 +37,7 @@ const n = document.querySelector("#input")
   , d = document.querySelector("#length")
   , p = document.querySelector("#output")
   , w = async (x, r, i, o, a) => {
-    let e;
+    let m;
     if (!await y())
         throw new Error("AI Summarization is not supported");
     return window.ai.summarizer.create({
@@ -97,7 +97,8 @@ const n = document.querySelector("#input")
     u.addEventListener("change", a),
     l.addEventListener("change", a),
     d.addEventListener("change", a),
-    n.addEventListener("input", a)
+    n.addEventListener("input", a),
+    document.getElementById("modelDownloadProgress").value = 100;
 }
 ;
 S();
