@@ -50,8 +50,13 @@ const n = document.querySelector("#input")
 }
   , y = async () => {
     let r = await window.ai.summarizer.capabilities();
-    if (r.available === "readily" || r.available === "after-download")
+    if (r.available === "readily") {
+        document.getElementById("modelDownloadProgress").value = 100;
         return !0;
+    }
+    if(r.available === "after-download"){
+        return !0;
+    }
     try {
         await window.ai.summarizer.create({
             sharedContext: q.value,
