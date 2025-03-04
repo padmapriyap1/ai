@@ -52,7 +52,7 @@ const n = document.querySelector("#input")
       let result = await window.ai.summarizer.capabilities();
       if (result.available == 'after-download')
       {
-          window.setTimeout(checkDownload, 1000);
+          window.setTimeout(cd, 1000);
       }
       if (result.available == 'readily')
       {
