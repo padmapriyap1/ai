@@ -53,7 +53,9 @@ const n = document.querySelector("#input")
                 document.getElementById("modelDownloadProgress").value = 100;
                 console.log("Download complete");
             }
-            })
+            });
+        }
+    })
 }
   , cd = async () => {
       let result = await window.ai.summarizer.capabilities();
