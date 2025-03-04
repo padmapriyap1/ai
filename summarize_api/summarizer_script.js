@@ -48,13 +48,24 @@ const n = document.querySelector("#input")
         monitor: e
     })
 }
-  , y = async () => {
+  , cd = async () => {
+      let result = await window.ai.summarizer.capabilities();
+      if (result.available == 'after-download')
+      {
+          window.setTimeout(checkDownload, 1000);
+      }
+      if (result.available == 'readily')
+      {
+          window.location.reload();
+      }
+  }, y = async () => {
     let r = await window.ai.summarizer.capabilities();
     if (r.available === "readily") {
         document.getElementById("modelDownloadProgress").value = 100;
         return !0;
     }
     if(r.available === "after-download"){
+        cd();
         return !0;
     }
     try {
