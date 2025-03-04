@@ -40,7 +40,7 @@ const n = document.querySelector("#input")
     let e;
     if (!await y())
         throw new Error("AI Summarization is not supported");    
-    return window.ai.summarizer.create({
+    return await window.ai.summarizer.create({
         sharedContext: x,
         type: r,
         format: i,
