@@ -21,6 +21,12 @@
     <main>
       <fieldset>
         <p id="error">
+          <div class="dialog" id="summarization-unavailable">
+            <div>Your browser doesn't support the Summarization API.</div>
+          </div>
+          <div class="dialog" id="summarization-unsupported">
+            <div>The Summarization API is available, but your device is unable to run it.</div>
+          </div>
         </p>
         <p id="okay">
             SUCCESS: Summarize API supported. <span><b>Char/s <b id="cps">0</b></b>|<b>Tokens/s <b id="tps">0</b></b>|<b>Start Latency (ms)<b id="latency">0</b></b></span>
