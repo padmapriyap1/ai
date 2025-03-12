@@ -131,7 +131,7 @@ textarea {
   text-wrap: auto;
 }
 
-dialog {
+.dialog {
   display: none;
   position: absolute;
   top: 50%;
