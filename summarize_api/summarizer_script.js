@@ -65,6 +65,7 @@ const n = document.querySelector("#input")
     let r = await window.ai.summarizer.availability();
     if (r === "available") {
         document.getElementById("modelDownloadProgress").value = 100;
+        document.getElementById("okay").style.display = "block";
         return !0;
     }
     if(r === "after-download"){

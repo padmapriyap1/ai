@@ -115,12 +115,6 @@ p[class^="from-"].emoji::before {
 }
 
 textarea {
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-}
-
-textarea {
-  padding: 10px;
   max-width: 100%;
   line-height: 1.5;
   border-radius: 5px;
@@ -129,6 +123,8 @@ textarea {
   width:calc(100% - 22px);
   height: 100px;
   text-wrap: auto;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
 }
 
 .dialog {
