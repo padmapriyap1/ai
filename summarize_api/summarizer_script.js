@@ -36,6 +36,8 @@ const n = document.querySelector("#input")
   , l = document.querySelector("#format")
   , d = document.querySelector("#length")
   , p = document.querySelector("#output")
+  , v = document.querySelector("#summarization-unsupported")
+  , h = document.querySelector("#summarization-unavailable")
   , w = async (x, r, i, o, a) => {
     let e;
     if (!await y())
