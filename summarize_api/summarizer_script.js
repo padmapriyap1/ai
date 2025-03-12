@@ -56,9 +56,8 @@ const n = document.querySelector("#input")
             });
         }
     })
-}
-  , cd = async () => {
-      let result = await window.ai.summarizer.capabilities();
+} , cd = async () => {
+      let result = await window.ai.summarizer.availability();
       if (result.available == 'after-download')
       {
           window.setTimeout(cd, 1000);
@@ -68,7 +67,7 @@ const n = document.querySelector("#input")
           window.location.reload();
       }
   }, y = async () => {
-    let r = await window.ai.summarizer.capabilities();
+    let r = await window.ai.summarizer.availability();
     if (r.available === "readily") {
         document.getElementById("modelDownloadProgress").value = 100;
         return !0;
@@ -95,7 +94,7 @@ const n = document.querySelector("#input")
             }
         })
     } catch {}
-    return r = await window.ai.summarizer.capabilities(),
+    return r = await window.ai.summarizer.availability(),
     r.available !== "no"
 }
   , S = async () => {
