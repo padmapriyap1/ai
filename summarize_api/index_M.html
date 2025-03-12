@@ -131,7 +131,7 @@ Jamie: No problem, Alex. I'm looking forward to it. Let's make it a success!
 
         async function checkDownload()
         {
-            let result = await window.ai.summarizer.capabilities();
+            let result = await window.ai.summarizer.availability();
             if (result.available == 'after-download')
             {
                 window.setTimeout(checkDownload, 1000);
@@ -159,7 +159,7 @@ Jamie: No problem, Alex. I'm looking forward to it. Let's make it a success!
         
         try
         {
-            let result = await window.ai.summarizer.capabilities();
+            let result = await window.ai.summarizer.availability();
             if (result.available == 'no')
             {
               error(kNoModelError);

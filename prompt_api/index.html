@@ -84,7 +84,7 @@
 
         async function checkDownload()
         {
-            let result = await window.ai.languageModel.capabilities();
+            let result = await window.ai.languageModel.availability();
             if (result.available == 'after-download')
             {
                 window.setTimeout(checkDownload, 1000);
@@ -122,7 +122,7 @@
        
         try
         {
-            let result = await window.ai.languageModel.capabilities();
+            let result = await window.ai.languageModel.availability();
             if (result.available == 'no')
             {
               error(kNoModelError);
