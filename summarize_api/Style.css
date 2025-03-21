@@ -163,7 +163,7 @@ button {
     url("https://cdn.rawgit.com/AllThingsSmitty/fonts/25983b71/SanFrancisco/sanfranciscodisplay-regular-webfont.woff") format("woff");
 }
 
-body {  
+/* body {  
   font-family: -apple-system, 
     BlinkMacSystemFont, 
     "Segoe UI", 
@@ -175,7 +175,7 @@ body {
     sans-serif;
   font-weight: normal;
   margin: 0;
-}
+} */
 
 .container {
   margin: 0 auto;
@@ -183,18 +183,18 @@ body {
   padding: 1rem;
 }
 
-h1 {
+/* h1 {
   font-weight: normal;
   margin-bottom: 0.5rem;
-}
+} */
 
-h2 {
+/* h2 {
   border-bottom: 1px solid #e5e5ea;
   color: #666;
   font-weight: normal;
   margin-top: 0;
   padding-bottom: 1.5rem;
-}
+} */
 
 .comment {
   color: #222;
