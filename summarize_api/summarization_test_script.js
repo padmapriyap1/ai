@@ -9,8 +9,6 @@ const n = document.querySelector("#input")
   , y = async () => {
     try {
         let r = await window.ai.summarizer.availability();
-        if (r === "unavailable") 
-            throw new Error("AI Summarization is not available");
         if (r === "available") {
             document.getElementById("modelDownloadProgress").value = 100;
             document.getElementById("okay").style.display = "block";
