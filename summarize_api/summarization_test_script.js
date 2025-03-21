@@ -25,7 +25,7 @@ const n = document.querySelector("#input")
         document.getElementById("okay").style.display = "block";
         return !0;
     }
-    if(r === "after-download" || result == 'downloading'){
+    if(r === "after-download"){
         return !0;
     }
     try {
