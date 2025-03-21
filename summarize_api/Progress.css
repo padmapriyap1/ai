@@ -1,7 +1,7 @@
 progress[value] {
   --w: 200px; /* the width*/
   --color:  /* the progress color */
-    linear-gradient(90deg,#e27441,#76af76) 0/var(--w);
+    linear-gradient(90deg,#a4c69e,#71b271) 0/var(--w);
   --background: lightgrey; /* the background color */
 
   -webkit-appearance: none;
