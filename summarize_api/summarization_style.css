@@ -64,3 +64,19 @@ section {
     margin: 2rem 0 0;
 	border-top: 1px solid #edf1f2
 }
+
+* {
+    box-sizing: border-box;
+  }
+  
+  .box {
+    float: left;
+    width: 33.33%;
+    padding: 50px;
+  }
+  
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
