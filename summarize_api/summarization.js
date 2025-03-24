@@ -9,18 +9,21 @@ const n = document.querySelector("#input")
   , h = document.querySelector("#summarization-unavailable")
   , cd = async () => {
     let result = await window.ai.summarizer.availability();
-    if (result == 'downloadable')
-    {
-        document.getElementById("info").style.display = "block";
-        window.setTimeout(cd, 1000);
-    }
-    if (result == 'downloading') {
-        document.getElementById("info").style.display = "none";
-        window.setTimeout(cd, 1000);
-    }
-    if (result == 'available')
-    {
-        window.location.reload();
+    switch (result) {
+        case 'downloadable':
+            document.getElementById("info").style.display = "block";
+            window.setTimeout(cd, 1000);
+            break;
+        case 'downloading':
+            document.getElementById("info").style.display = "none";
+            window.setTimeout(cd, 1000);
+            break;
+        case 'available':
+            window.location.reload();
+            break;
+        default:
+            window.setTimeout(cd, 1000);
+            break;
     }
 }
 , y = async () => {
@@ -30,7 +33,7 @@ const n = document.querySelector("#input")
             document.getElementById("modelDownloadProgress").value = 100;
             document.getElementById("okay").style.display = "block";
         }
-        if(r === "downloadable" || r === "downloading"){
+        if(r === "downloadable" || r === "downloading" || r === "unavailable"){
             cd();
         }
         return await window.ai.summarizer.create({
