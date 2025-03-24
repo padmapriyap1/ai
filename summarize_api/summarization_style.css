@@ -64,8 +64,11 @@ textarea {
   
   
   h1 {
-    font-weight: normal;
+    font-weight: bold;
     margin-bottom: 0.5rem;
+    text-align: center;
+    font-family: auto;
+    -webkit-text-fill-color: darkcyan;
   }
   
   h2 {
@@ -78,11 +81,13 @@ textarea {
 
   fieldset {
     margin-top: 0.5rem;
-    margin-bottom: 0.5rem;    
-    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    line-height: 2;
     border-radius: 10px;
-    box-shadow: 5px 5px 5px rgba(0,0,0,7);
-    background-color:#a09f9f
+    box-shadow: 10px 9px 13px rgba(0, 0, 0, 1);
+    background-color: #e1e0e0;
+    text-indent: 5px;
+    text-align: justify;
   }
   
   #okay
