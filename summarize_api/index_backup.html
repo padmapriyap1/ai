@@ -1,11 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
+<!--
+  Copyright 2024 Google LLC
+  SPDX-License-Identifier: Apache-2.0
+-->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <!-- Summarizer API --->
     <title>Summarization API Playgroud</title>
-    <script type="module"  src="summarization_test_script.js"></script>
-    <link rel="stylesheet" href="summarization_style.css">
+    <script type="module"  src="summarizer_script.js"></script>
+    <link rel="stylesheet" href="Style.css">
     <link rel="stylesheet" href="Progress.css">
     <link rel="icon" type="image/x-icon" href="favicon.png">
   </head>
@@ -15,20 +20,16 @@
     </header>
     <main>
       <fieldset>
-        <div class="dialog" id="summarization-unavailable">
-          <div>Your browser doesn't support the Summarization API.</div>
-        </div>
-        <div class="dialog" id="summarization-unsupported">
-          <div>The Summarization API is available, but your device is unable to run it.</div>
-        </div>
-        <div class="dialog" id="summarization-runtime-error">
-          <div>Cannot run summarization API. Refer console output for more detail.</div>
-        </div>
-        <p id="okay">
-            Model download complete and Summarize API is available to try.
+        <p id="error">
+          <div class="dialog" id="summarization-unavailable">
+            <div>Your browser doesn't support the Summarization API.</div>
+          </div>
+          <div class="dialog" id="summarization-unsupported">
+            <div>The Summarization API is available, but your device is unable to run it.</div>
+          </div>
         </p>
-        <p id="info">
-          Getting ready to download the required model to try Summarization API...
+        <p id="okay">
+            Model download complete and Summarize API is supported.
         </p>
         <div class="progress-bar">
           <label for="modelDownloadProgress">Model Download Progress:</label>
@@ -73,18 +74,17 @@
             </div>
         </fieldset>
         <br/><br/>
-        <div class="main_display">
-          <div class="input_output_box">
-            <textarea id="input" placeholder="Type or paste your content here to summarize..."></textarea>
-          </div>
-          <div class="input_output_box" style="background-color:#eee">
-            <details open>
-              <summary>Summarization Result</summary>
-              <article>
-                <pre id="output"></pre>
-              </article>
-              </details>          
-          </div>
+        <fieldset>
+          <textarea id="input" placeholder="Type or paste your content here to summarize...""></textarea>
+        </fieldset>
+        <br/><br/>
+        <div>
+          <details open>
+            <summary>Summarization Result</summary>
+            <article>
+              <pre id="output"></pre>
+            </article>
+            </details>          
         </div>
     </main>
   </body>
