@@ -20,16 +20,20 @@
     </header>
     <main>
       <fieldset>
-        <p id="error">
-          <div class="dialog" id="summarization-unavailable">
-            <div>Your browser doesn't support the Summarization API.</div>
-          </div>
-          <div class="dialog" id="summarization-unsupported">
-            <div>The Summarization API is available, but your device is unable to run it.</div>
-          </div>
-        </p>
+        <div class="dialog" id="summarization-unavailable">
+          <div>Your browser doesn't support the Summarization API.</div>
+        </div>
+        <div class="dialog" id="summarization-unsupported">
+          <div>The Summarization API is available, but your device is unable to run it.</div>
+        </div>
+        <div class="dialog" id="summarization-runtime-error">
+          <div>Cannot run summarization API. Refer console output for more detail.</div>
+        </div>
         <p id="okay">
-            Model download complete and Summarize API is supported.
+            Model download complete and Summarize API is available to try.
+        </p>
+        <p id="info">
+          Getting ready to download the required model to try Summarization API...
         </p>
         <div class="progress-bar">
           <label for="modelDownloadProgress">Model Download Progress:</label>

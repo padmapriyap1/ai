@@ -30,9 +30,11 @@ textarea {
     left: 50%;
     padding: 16px;
     transform: translate(-50%,-50%);
-    background-color: #8b0000;
+    background-color: #851919;
     border: 1px solid red;
-    border-radius: 4px
+    border-radius: 4px;
+    text-align: center;
+    -webkit-text-fill-color: antiquewhite;
   }
   
   pre {
@@ -44,10 +46,7 @@ textarea {
     text-wrap: auto;
     font-size: 0.8rem;
     letter-spacing: 1px;
-  }
-  
-  
-  
+  }  
   
   body {  
     font-family: -apple-system, 
@@ -93,9 +92,11 @@ textarea {
     display:none;
     position: relative;
   }
-  
-  #okay span
+  #info
   {
-    color: gray;
-    float:right;
+    color:orange;
+    font-size: 12px;
+    font-weight: bold;
+    display:none;
+    position: relative;
   }

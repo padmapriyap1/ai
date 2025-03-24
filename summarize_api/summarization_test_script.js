@@ -4,6 +4,7 @@ const n = document.querySelector("#input")
   , l = document.querySelector("#format")
   , d = document.querySelector("#length")
   , p = document.querySelector("#output")
+  , a = document.querySelector("#summarization-runtime-error")
   , v = document.querySelector("#summarization-unsupported")
   , h = document.querySelector("#summarization-unavailable")
   , y = async () => {
@@ -13,24 +14,30 @@ const n = document.querySelector("#input")
             document.getElementById("modelDownloadProgress").value = 100;
             document.getElementById("okay").style.display = "block";
         }
+        if(r === "downloadable"){
+            document.getElementById("info").style.display = "block";
+        }
         return await window.ai.summarizer.create({
             sharedContext: q.value,
             type: u.value,
             format: l.value,
             length: d.value,
             monitor(m) {
+                document.getElementById("info").style.display = "none";
                 m.addEventListener("downloadprogress", e => {
                 // update the progress bar with latest download status
                 document.getElementById("modelDownloadProgress").value = (e.loaded / e.total) * 100;
                 if (e.loaded == e.total) {
                     document.getElementById("modelDownloadProgress").value = 100;
                     console.log("Download complete");
+                    window.location.reload();
                 }
                 });
             }
         })
     } catch(e) {
-        console.error("Failed to create summarizer: ", e);        
+        console.error("Failed to create summarizer: ", e);   
+        a.style.display = "block";     
     }
  }
  , S = async () => {
