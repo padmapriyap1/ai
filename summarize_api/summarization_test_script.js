@@ -7,15 +7,31 @@ const n = document.querySelector("#input")
   , a = document.querySelector("#summarization-runtime-error")
   , v = document.querySelector("#summarization-unsupported")
   , h = document.querySelector("#summarization-unavailable")
-  , y = async () => {
+  , cd = async () => {
+    let result = await window.ai.summarizer.availability();
+    if (result == 'downloadable')
+    {
+        document.getElementById("info").style.display = "block";
+        window.setTimeout(cd, 1000);
+    }
+    if (result == 'downloading') {
+        document.getElementById("info").style.display = "none";
+        window.setTimeout(cd, 1000);
+    }
+    if (result == 'available')
+    {
+        window.location.reload();
+    }
+}
+, y = async () => {
     try {
         let r = await window.ai.summarizer.availability();
         if (r === "available") {
             document.getElementById("modelDownloadProgress").value = 100;
             document.getElementById("okay").style.display = "block";
         }
-        if(r === "downloadable"){
-            document.getElementById("info").style.display = "block";
+        if(r === "downloadable" || r === "downloading"){
+            cd();
         }
         return await window.ai.summarizer.create({
             sharedContext: q.value,
@@ -23,14 +39,12 @@ const n = document.querySelector("#input")
             format: l.value,
             length: d.value,
             monitor(m) {
-                document.getElementById("info").style.display = "none";
                 m.addEventListener("downloadprogress", e => {
                 // update the progress bar with latest download status
                 document.getElementById("modelDownloadProgress").value = (e.loaded / e.total) * 100;
                 if (e.loaded == e.total) {
                     document.getElementById("modelDownloadProgress").value = 100;
                     console.log("Download complete");
-                    window.location.reload();
                 }
                 });
             }

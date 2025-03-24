@@ -75,13 +75,14 @@ textarea {
     margin-top: 0;
     padding-bottom: 1.5rem;
   }
-  
-  
-  #error
-  {
-    color: red;
-    font-size: 12px;
-    font-weight: bold;
+
+  fieldset {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;    
+    line-height: 1.5;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,7);
+    background-color:#a09f9f
   }
   
   #okay
@@ -92,6 +93,7 @@ textarea {
     display:none;
     position: relative;
   }
+
   #info
   {
     color:orange;
