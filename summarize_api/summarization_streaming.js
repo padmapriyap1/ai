@@ -76,7 +76,7 @@ const n = document.querySelector("#input")
             try {
                 p.textContent = "Generating summary...";
                 let e = await y()
-                  , stream = await e.summarizeStreaming(n.innerHTML);
+                  , stream = await e.summarizeStreaming(n.value);
                 try {
                     let result = '';
                     let previousLength = 0;
