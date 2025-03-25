@@ -82,11 +82,10 @@ const n = document.querySelector("#input")
                     let previousLength = 0;
                     for await (const segment of stream) {
                         const newContent = segment.slice(previousLength);
-                        console.log("New content: \n" + newContent);
                         previousLength = segment.length;  
                         result += newContent;
                     }
-                    p.textContent(result);
+                    p.textContent = result;
                 } catch (e) {
                     console.error("Failed to stream the summary: ", e);
                     a.style.display = "block";
