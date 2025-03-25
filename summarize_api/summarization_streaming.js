@@ -76,7 +76,7 @@ const n = document.querySelector("#input").innerHTML
             try {
                 p.textContent = "Generating summary...";
                 let e = await y()
-                  , t = await e.summarizeStreaming(n.value);
+                  , stream = await e.summarizeStreaming(n.value);
             } catch (e) {
                 console.error("Failed to summarize: ", e);
                 a.style.display = "block";
@@ -96,7 +96,7 @@ const n = document.querySelector("#input").innerHTML
                 a.style.display = "block";
             }
             
-        }, 1e3);
+        }, 1e3)
     }
     q.addEventListener("change", a),
     u.addEventListener("change", a),
