@@ -67,6 +67,8 @@ const n = document.querySelector("#input")
         return
     }
     let o;
+    let result = '';
+    let previousChunk = '';
     function a() {
         if (n.value === "") {
             return
@@ -78,13 +80,14 @@ const n = document.querySelector("#input")
                 let e = await y()
                   , stream = await e.summarizeStreaming(n.value);
                 try {
-                    let result = '';
-                    let previousLength = 0;
-                    for await (const segment of stream) {
-                        const newContent = segment.slice(previousLength);
-                        previousLength = segment.length;  
-                        result += newContent;
+                    for await (const chunk of stream) {
+                      const newChunk = chunk.startsWith(previousChunk)
+                          ? chunk.slice(previousChunk.length) : chunk;
+                      console.log(newChunk);
+                      result += newChunk;
+                      previousChunk = chunk;
                     }
+                    console.log(result);
                     p.textContent = result;
                 } catch (e) {
                     console.error("Failed to stream the summary: ", e);
