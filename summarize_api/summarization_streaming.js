@@ -77,24 +77,25 @@ const n = document.querySelector("#input")
                 p.textContent = "Generating summary...";
                 let e = await y()
                   , stream = await e.summarizeStreaming(n.innerHTML);
+                try {
+                    let result = '';
+                    let previousLength = 0;
+                    for await (const segment of stream) {
+                        const newContent = segment.slice(previousLength);
+                        console.log("New content: \n" + newContent);
+                        previousLength = segment.length;  
+                        result += newContent;
+                    }
+                    p.textContent(result);
+                } catch (e) {
+                    console.error("Failed to stream the summary: ", e);
+                    a.style.display = "block";
+                }
             } catch (e) {
                 console.error("Failed to summarize: ", e);
                 a.style.display = "block";
             }
-            try {
-                let result = '';
-                let previousLength = 0;
-                for await (const segment of stream) {
-                    const newContent = segment.slice(previousLength);
-                    console.log("New content: \n" + newContent);
-                    previousLength = segment.length;  
-                    result += newContent;
-                }
-                p.textContent(result);
-            } catch (e) {
-                console.error("Failed to stream the summary: ", e);
-                a.style.display = "block";
-            }
+            
             
         }, 1e3)
     }
