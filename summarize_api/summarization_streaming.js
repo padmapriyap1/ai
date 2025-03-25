@@ -1,4 +1,4 @@
-const n = document.querySelector("#input").innerHTML
+const n = document.querySelector("#input")
   , q = document.querySelector("#context")
   , u = document.querySelector("#type")
   , l = document.querySelector("#format")
@@ -76,7 +76,7 @@ const n = document.querySelector("#input").innerHTML
             try {
                 p.textContent = "Generating summary...";
                 let e = await y()
-                  , stream = await e.summarizeStreaming(n.value);
+                  , stream = await e.summarizeStreaming(n.innerHTML);
             } catch (e) {
                 console.error("Failed to summarize: ", e);
                 a.style.display = "block";
