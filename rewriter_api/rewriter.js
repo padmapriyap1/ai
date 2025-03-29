@@ -1,14 +1,14 @@
 const n = document.querySelector("#input")
   , q = document.querySelector("#context")
-  , u = document.querySelector("#type")
+  , u = document.querySelector("#tone")
   , l = document.querySelector("#format")
   , d = document.querySelector("#length")
   , p = document.querySelector("#output")
-  , a = document.querySelector("#summarization-runtime-error")
-  , v = document.querySelector("#summarization-unsupported")
-  , h = document.querySelector("#summarization-unavailable")
+  , a = document.querySelector("#rewriter-runtime-error")
+  , v = document.querySelector("#rewriter-unsupported")
+  , h = document.querySelector("#rewriter-unavailable")
   , cd = async () => {
-    let assistant = window.ai.summarizer || window.AISummarizer || window.Summarizer;
+    let assistant = window.ai.rewriter || window.AIRewriter || window.rewriter;
     let result = await assistant.availability();
     switch (result) {
         case 'downloadable':
@@ -29,7 +29,7 @@ const n = document.querySelector("#input")
 }
 , y = async () => {
     try {
-        let assistant = window.ai.summarizer || window.AISummarizer || window.Summarizer;
+        let assistant = window.ai.rewriter || window.AIRewriter || window.Rewriter;
         let r = await assistant.availability();
         if (r === "available") {
             document.getElementById("modelDownloadProgress").value = 100;
@@ -38,9 +38,9 @@ const n = document.querySelector("#input")
         if(r === "downloadable" || r === "downloading" || r === "unavailable"){
             cd();
         }
-        return assistant.create({
+        return await assistant.create({
             sharedContext: q.value,
-            type: u.value,
+            tone: u.value,
             format: l.value,
             length: d.value,
             monitor(m) {
@@ -55,7 +55,7 @@ const n = document.querySelector("#input")
             }
         })
     } catch(e) {
-        console.error("Failed to create summarizer: ", e);   
+        console.error("Failed to create Rewriter: ", e);   
         a.style.display = "block";     
     }
  }
@@ -63,8 +63,9 @@ const n = document.querySelector("#input")
     if (window.ai === void 0) {
         h.style.display = "block";
         return
+        return
     }
-    let assistant = window.ai.summarizer || window.AISummarizer || window.Summarizer;
+    let assistant = window.ai.rewriter || window.AIRewriter || window.Rewriter;
     if (assistant === void 0) {
         h.style.display = "block";
         return
@@ -80,9 +81,9 @@ const n = document.querySelector("#input")
         }
         clearTimeout(o),
         o = setTimeout(async () => {
-            p.textContent = "Generating summary...";
+            p.textContent = "Rewriter is working on generating result...";
             let e = await y()
-              , t = await e.summarize(n.value);
+              , t = await e.rewrite(n.value);
             e.destroy(),
             p.textContent = t
         }

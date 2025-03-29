@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Summarizer API --->
+    <title>Summarization API Playgroud</title>
+    <script type="module"  src="summarization_streaming.js"></script>
+    <link rel="stylesheet" href="summarization_style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+  </head>
+  <body>
+    <header>
+      <h1>Summarization API Playground</h1>
+    </header>
+    <main>
+      <fieldset>
+        <div class="dialog" id="summarization-unavailable">
+          <div>Your browser doesn't support the Summarization API.</div>
+        </div>
+        <div class="dialog" id="summarization-unsupported">
+          <div>The Summarization API is available, but your device is unable to run it.</div>
+        </div>
+        <div class="dialog" id="summarization-runtime-error">
+          <div>Cannot run summarization API. Refer console output for more detail.</div>
+        </div>
+        <p id="okay">
+            Model download complete and Summarize API is available to try.
+        </p>
+        <p id="info">
+          Getting ready to download the required model to try Summarization API...
+        </p>
+        <div class="progress-bar">
+          <label for="modelDownloadProgress">Model Download Progress:</label>
+          <progress id="modelDownloadProgress" value="0" max="100"></progress>
+      </div>
+      </fieldset>
+      <br/><br/>
+        <fieldset>
+            <legend>Settings</legend>
+            <div>
+              <label for="context">Context:</label>
+              <select id="context">
+                  <option value="This is an article that needs summary">Article summary</option>
+                  <option value="Help summarize the conversation">Email or Chat Summary </option>
+                  <option value="Generate Title and Headline">Title & Headline Suggestion</option>
+                  <option value="Create a Teaser">Create a Teaser</option>
+              </select>
+              </div>
+            <div>
+              <label for="type">Summary Type:</label>
+              <select id="type">
+                <option value="key-points" selected>Key Points</option>
+                <option value="tl;dr">TL;DR</option>
+                <option value="teaser">Teaser</option>
+                <option value="headline">Headline</option>
+              </select>
+            </div>
+            <div>
+              <label for="length">Length:</label>
+              <select id="length">
+                <option value="short" selected>Short</option>
+                <option value="medium">Medium</option>
+                <option value="long">Long</option>
+              </select>
+            </div>
+            <div>
+              <label for="format">Format:</label>
+              <select id="format">
+                <option value="markdown" selected>Markdown</option>
+                <option value="plain-text">Plain text</option>
+              </select>
+            </div>
+        </fieldset>
+        <br/><br/>
+        <div class="main_display">
+          <div class="input_output_box">
+            <textarea id="input" placeholder="Type or paste your content here to summarize..."></textarea>
+          </div>
+          <div class="input_output_box" style="background-color:#eee">
+            <details open>
+              <summary>Summarization Result</summary>
+              <article>
+                <pre id="output"></pre>
+              </article>
+              </details>          
+          </div>
+        </div>
+    </main>
+  </body>
+</html>

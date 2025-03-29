@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Writer API --->
+    <title>Writer API Playgroud</title>
+    <script type="module"  src="writer.js"></script>
+    <link rel="stylesheet" href="writer_style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+  </head>
+  <body>
+    <header>
+      <h1>Writer API Playground</h1>
+    </header>
+    <main>
+      <fieldset>
+        <div class="dialog" id="writer-unavailable">
+          <div>Your browser doesn't support the Writer API.</div>
+        </div>
+        <div class="dialog" id="writer-unsupported">
+          <div>The Writer API is available, but your device is unable to run it.</div>
+        </div>
+        <div class="dialog" id="writer-runtime-error">
+          <div>Cannot run Writer API. Refer console output for more detail.</div>
+        </div>
+        <p id="okay">
+            Model download complete and Writer API is available to try.
+        </p>
+        <p id="info">
+          Getting ready to download the required model to try Writer API...
+        </p>
+        <div class="progress-bar">
+          <label for="modelDownloadProgress">Model Download Progress:</label>
+          <progress id="modelDownloadProgress" value="0" max="100"></progress>
+      </div>
+      </fieldset>
+      <br/><br/>
+        <fieldset>
+            <legend>Settings</legend>
+            <div>
+              <label for="context">Context:</label>
+              <input type="text" id="context" placeholder="Additional context about the content that can help the Writer">
+              </div>
+            <div>
+              <label for="tone">Tone:</label>
+              <select id="tone">
+                <option value="formal">Formal</option>
+                <option value="casual">Casual</option>
+                <option value="neutral" selected>Neutral</option>
+              </select>
+            </div>
+            <div>
+              <label for="length">Length:</label>
+              <select id="length">
+                <option value="short">Short</option>
+                <option value="medium" selected>Medium</option>
+                <option value="long">Long</option>
+              </select>
+            </div>
+            <div>
+              <label for="format">Format:</label>
+              <select id="format">
+                <option value="markdown">Markdown</option>
+                <option value="plain-text" selected>Plain text</option>
+              </select>
+            </div>
+        </fieldset>
+        <br/><br/>
+        <div class="main_display">
+          <div class="input_output_box">
+            <textarea id="input" placeholder="Type or paste your content here to write..."></textarea>
+          </div>
+          <div class="input_output_box" style="background-color:#eee">
+            <details open>
+              <summary>Writer Result</summary>
+              <article>
+                <pre id="output"></pre>
+              </article>
+              </details>          
+          </div>
+        </div>
+    </main>
+  </body>
+</html>

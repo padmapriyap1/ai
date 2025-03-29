@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Rewriter API --->
+    <title>Rewriter API Playgroud</title>
+    <script type="module"  src="rewriter.js"></script>
+    <link rel="stylesheet" href="rewriter_style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+  </head>
+  <body>
+    <header>
+      <h1>Rewriter API Playground</h1>
+    </header>
+    <main>
+      <fieldset>
+        <div class="dialog" id="rewriter-unavailable">
+          <div>Your browser doesn't support the Rewriter API.</div>
+        </div>
+        <div class="dialog" id="rewriter-unsupported">
+          <div>The Rewriter API is available, but your device is unable to run it.</div>
+        </div>
+        <div class="dialog" id="rewriter-runtime-error">
+          <div>Cannot run Rewriter API. Refer console output for more detail.</div>
+        </div>
+        <p id="okay">
+            Model download complete and Rewriter API is available to try.
+        </p>
+        <p id="info">
+          Getting ready to download the required model to try Rewriter API...
+        </p>
+        <div class="progress-bar">
+          <label for="modelDownloadProgress">Model Download Progress:</label>
+          <progress id="modelDownloadProgress" value="0" max="100"></progress>
+      </div>
+      </fieldset>
+      <br/><br/>
+        <fieldset>
+            <legend>Settings</legend>
+            <div>
+              <label for="context">Context:</label>
+              <input type="text" id="context" placeholder="Additional context about the content that can help the Rewriter">
+              </div>
+            <div>
+              <label for="tone">Tone:</label>
+              <select id="tone">
+                <option value="more-formal">Formal</option>
+                <option value="more-casual">Casual</option>
+                <option value="as-is" selected>As-Is</option>
+              </select>
+            </div>
+            <div>
+              <label for="length">Length:</label>
+              <select id="length">
+                <option value="shorter">Shorter</option>
+                <option value="longer">Longer</option>
+                <option value="as-is" selected>As-Is</option>
+              </select>
+            </div>
+            <div>
+              <label for="format">Format:</label>
+              <select id="format">
+                <option value="markdown">Markdown</option>
+                <option value="plain-text">Plain text</option>
+                <option value="as-is" selected>As-Is</option>
+              </select>
+            </div>
+        </fieldset>
+        <br/><br/>
+        <div class="main_display">
+          <div class="input_output_box">
+            <textarea id="input" placeholder="Type or paste your content here to rewrite..."></textarea>
+          </div>
+          <div class="input_output_box" style="background-color:#eee">
+            <details open>
+              <summary>Rewriter Result</summary>
+              <article>
+                <pre id="output"></pre>
+              </article>
+              </details>          
+          </div>
+        </div>
+    </main>
+  </body>
+</html>
