@@ -83,7 +83,9 @@ const n = document.querySelector("#input")
         o = setTimeout(async () => {
             p.textContent = "Rewriter is working on generating result...";
             let e = await y()
-              , t = await e.rewrite(n.value);
+              , t = await e.rewrite(n.value, {
+                context: "When rewriting, avoid any toxic language and be as constructive as possible."
+              });
             e.destroy(),
             p.textContent = t
         }
