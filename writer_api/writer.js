@@ -82,9 +82,7 @@ const n = document.querySelector("#input")
         o = setTimeout(async () => {
             p.textContent = "Writer is working on generating result...";
             let e = await y()
-              , t = await e.write(n.value, {
-                context: "When writing, void any toxic language and be as constructive as possible."
-              });
+              , t = await e.write(n.value);
             e.destroy(),
             p.textContent = t
         }
