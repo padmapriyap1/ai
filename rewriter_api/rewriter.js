@@ -8,7 +8,7 @@ const n = document.querySelector("#input")
   , v = document.querySelector("#rewriter-unsupported")
   , h = document.querySelector("#rewriter-unavailable")
   , cd = async () => {
-    let assistant = window.ai.rewriter || window.AIRewriter || window.rewriter;
+    let assistant = window.ai.rewriter || window.AIRewriter || window.Rewriter;
     let result = await assistant.availability();
     switch (result) {
         case 'downloadable':
