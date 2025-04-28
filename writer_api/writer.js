@@ -81,10 +81,23 @@ const n = document.querySelector("#input")
         clearTimeout(o),
         o = setTimeout(async () => {
             p.textContent = "Writer is working on generating result...";
-            let e = await y()
-              , t = await e.write(n.value);
-            e.destroy(),
-            p.textContent = t
+            try {
+               let e = await y();
+               let abortController = new AbortController();
+               const stream = await e.writeStreaming(n.value, {signal: abortController.signal});
+               let isFirstChunk = true;
+               for await (const chunk of stream) {
+                  if (isFirstChunk) {
+                    isFirstChunk = false;
+                    p.textContent = "";
+                  }
+                  p.textContent += chunk;
+                }
+              } catch (e) {
+                console.error(e);
+                a.style.display = "block";
+              }
+            e.destroy();
         }
         , 1e3)
     }

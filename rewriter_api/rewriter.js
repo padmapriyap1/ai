@@ -1,3 +1,10 @@
+console.warn = function(message){
+    if (message.includes("there was not an execution config")) {
+        a.style.display = "block";
+        console.error("Rewriter is not available: ", message);
+        return;
+    }
+}
 const n = document.querySelector("#input")
   , q = document.querySelector("#context")
   , u = document.querySelector("#tone")
@@ -8,6 +15,7 @@ const n = document.querySelector("#input")
   , v = document.querySelector("#rewriter-unsupported")
   , h = document.querySelector("#rewriter-unavailable")
   , cd = async () => {
+    try {
     let assistant = window.ai.rewriter || window.AIRewriter || window.Rewriter;
     let result = await assistant.availability();
     switch (result) {
@@ -25,7 +33,11 @@ const n = document.querySelector("#input")
         default:
             window.setTimeout(cd, 1000);
             break;
-    }
+        }
+} catch(e) {
+    console.error("Failed to create Rewriter: ", e);   
+    a.style.display = "block";     
+}
 }
 , y = async () => {
     try {
@@ -82,10 +94,23 @@ const n = document.querySelector("#input")
         clearTimeout(o),
         o = setTimeout(async () => {
             p.textContent = "Rewriter is working on generating result...";
-            let e = await y()
-              , t = await e.rewrite(n.value);
-            e.destroy(),
-            p.textContent = t
+            try {
+               let e = await y();
+               let abortController = new AbortController();
+               const stream = await e.rewriteStreaming(n.value, {signal: abortController.signal});
+               let isFirstChunk = true;
+               for await (const chunk of stream) {
+                  if (isFirstChunk) {
+                    isFirstChunk = false;
+                    p.textContent = "";
+                  }
+                  p.textContent += chunk;
+                }
+              } catch (e) {
+                console.error(e);
+                a.style.display = "block";
+              }
+            e.destroy();
         }
         , 1e3)
     }

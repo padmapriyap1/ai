@@ -81,10 +81,23 @@ const n = document.querySelector("#input")
         clearTimeout(o),
         o = setTimeout(async () => {
             p.textContent = "Generating summary...";
-            let e = await y()
-              , t = await e.summarize(n.value);
-            e.destroy(),
-            p.textContent = t
+            try {
+               let e = await y();
+               let abortController = new AbortController();
+               const stream = await e.summarizeStreaming(n.value, {signal: abortController.signal});
+               let isFirstChunk = true;
+               for await (const chunk of stream) {
+                  if (isFirstChunk) {
+                    isFirstChunk = false;
+                    p.textContent = "";
+                  }
+                  p.textContent += chunk;
+                }
+              } catch (e) {
+                console.error(e);
+                a.style.display = "block";
+              }
+            e.destroy();
         }
         , 1e3)
     }
